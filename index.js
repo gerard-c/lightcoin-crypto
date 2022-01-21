@@ -37,17 +37,23 @@ class Withdrawal extends Transaction {
   }
 
   isAllowed() {
-    return (this.account.balance - this.amount >= 0);
+    if (this.account.balance - this.amount >= 0) {
+      this.approval = true;
+    } else {
+      this.approval = false;
+    }
+    return this.approval;
   }
 }
 
-class Deposit extends Transaction{
-  get value () {
+class Deposit extends Transaction {
+  get value() {
     return this.amount;
   }
 
   isAllowed() {
-    return true;
+    this.approval = true;
+    return this.approval;
   }
 }
 
@@ -58,28 +64,30 @@ class Deposit extends Transaction{
 // We use the code below to "drive" the application logic above and make sure it's working as expected
 const myAccount = new Account('snow-patrol');
 
-t1 = new Withdrawal(50.25, myAccount);
+const t1 = new Withdrawal(50.25, myAccount);
 t1.commit();
 console.log('Transaction 1:', t1, '\n----');
 
-t2 = new Withdrawal(9.99, myAccount);
+const t2 = new Withdrawal(9.99, myAccount);
 t2.commit();
 console.log('Transaction 2:', t2, '\n----');
 
-t3 = new Deposit(120.00, myAccount);
+const t3 = new Deposit(120.00, myAccount);
 t3.commit();
 console.log('Transaction 3:', t3, '\n----');
 
-t4 = new Withdrawal(59.76, myAccount);
+const t4 = new Withdrawal(59.76, myAccount);
 t4.commit();
 console.log('Transaction 4:', t4, '\n----');
 
-t5 = new Deposit(679.56, myAccount);
+const t5 = new Deposit(679.56, myAccount);
 t5.commit();
 console.log('Transaction 5:', t5, '\n----');
 
-t6 = new Withdrawal(680, myAccount);
+const t6 = new Withdrawal(1000, myAccount);
 t6.commit();
 console.log('Transaction 6:', t6, '\n----');
 
 console.log('Balance:', myAccount.balance, '\n----');
+
+console.log(myAccount.transactions);
